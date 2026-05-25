@@ -30,9 +30,12 @@ export class GroupsService {
     const alreadyMember = await this.memberRepo.findOne({
       where: { userId: creator.id },
     });
-    if (alreadyMember) throw new ConflictException('You are already part of a group');
+    if (alreadyMember)
+      throw new ConflictException('You are already part of a group');
 
-    const group = this.groupRepo.create({ projectTitle: dto.projectTitle ?? null });
+    const group = this.groupRepo.create({
+      projectTitle: dto.projectTitle ?? null,
+    });
     const saved = await this.groupRepo.save(group);
 
     await this.memberRepo.save(
@@ -53,7 +56,8 @@ export class GroupsService {
     const membership = await this.memberRepo.findOne({
       where: { groupId, userId: requester.id },
     });
-    if (!membership) throw new ForbiddenException('You are not a member of this group');
+    if (!membership)
+      throw new ForbiddenException('You are not a member of this group');
 
     const peer = await this.userRepo.findOne({ where: { id: dto.userId } });
     if (!peer) throw new NotFoundException('User not found');
@@ -67,7 +71,8 @@ export class GroupsService {
     const peerAlreadyInGroup = await this.memberRepo.findOne({
       where: { userId: peer.id },
     });
-    if (peerAlreadyInGroup) throw new ConflictException('Peer is already part of a group');
+    if (peerAlreadyInGroup)
+      throw new ConflictException('Peer is already part of a group');
 
     return this.memberRepo.save(
       this.memberRepo.create({ groupId, userId: peer.id }),

@@ -15,15 +15,25 @@ import { Proposal } from './proposal.entity';
 @Entity('groups')
 @Index('idx_groups_status', ['status'])
 export class Group {
-  @ApiProperty({ format: 'uuid', example: 'b2c3d4e5-f6a7-8901-bcde-f12345678901' })
+  @ApiProperty({
+    format: 'uuid',
+    example: 'b2c3d4e5-f6a7-8901-bcde-f12345678901',
+  })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ApiPropertyOptional({ example: 'Blockchain-based academic credential verification', nullable: true })
-  @Column({ length: 255, nullable: true })
+  @ApiPropertyOptional({
+    example: 'Blockchain-based academic credential verification',
+    nullable: true,
+  })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   projectTitle: string | null;
 
-  @ApiProperty({ enum: GroupStatus, enumName: 'GroupStatus', example: GroupStatus.FORMING })
+  @ApiProperty({
+    enum: GroupStatus,
+    enumName: 'GroupStatus',
+    example: GroupStatus.FORMING,
+  })
   @Column({ type: 'enum', enum: GroupStatus, default: GroupStatus.FORMING })
   status: GroupStatus;
 
