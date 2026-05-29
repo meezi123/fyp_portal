@@ -1,22 +1,24 @@
 import { DataSource } from 'typeorm';
-import { config } from 'dotenv';
 import { User } from '../entities/user.entity';
 import { Group } from '../entities/group.entity';
 import { GroupMember } from '../entities/group-member.entity';
 import { Proposal } from '../entities/proposal.entity';
 import { Milestone } from '../entities/milestone.entity';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
 
-config();
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: process.env.DB_HOST ?? 'localhost',
-  port: parseInt(process.env.DB_PORT ?? '5432', 10),
-  username: process.env.DB_USER ?? 'postgres',
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME ?? 'fyp_portal',
+  // 1. Pass the environment variable directly here
+  url: process.env.DATABASE_URL,
   entities: [User, Group, GroupMember, Proposal, Milestone],
   migrations: ['dist/database/migrations/*.js'],
   synchronize: false,
   logging: false,
+  // 2. Enable SSL here too so running migrations from terminal won't fail
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });

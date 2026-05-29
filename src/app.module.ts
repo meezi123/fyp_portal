@@ -20,14 +20,13 @@ import { AdminModule } from './modules/admin/admin.module';
       inject: [ConfigService],
       useFactory: (cfg: ConfigService) => ({
         type: 'postgres',
-        host: cfg.getOrThrow<string>('DB_HOST'),
-        port: cfg.getOrThrow<number>('DB_PORT'),
-        username: cfg.getOrThrow<string>('DB_USER'),
-        password: cfg.getOrThrow<string>('DB_PASSWORD'),
-        database: cfg.getOrThrow<string>('DB_NAME'),
+        url: cfg.getOrThrow<string>('DATABASE_URL'),
         entities: [User, Group, GroupMember, Proposal, Milestone],
-        synchronize: cfg.get('NODE_ENV') !== 'production',
+        synchronize: false,
         logging: cfg.get('NODE_ENV') === 'development',
+        ssl: {
+          rejectUnauthorized: false,
+        },
       }),
     }),
 
